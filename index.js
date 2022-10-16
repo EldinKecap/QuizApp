@@ -1,4 +1,4 @@
-//SETTING UP FRONT PAGE
+// SETTING UP FRONT PAGE
 async function fetchData() {
     let response = await fetch('https://the-trivia-api.com/api/categories');
     // console.log(response);
@@ -8,7 +8,12 @@ async function fetchData() {
 }
 
 async function displayCategories() {
+    let category = document.getElementById('category');
+    let loader = document.createElement('div');
+    loader.className = 'loader'
+    category.appendChild(loader);
     let categoriesObject = await fetchData();
+    category.removeChild(loader)
     let categoryList = document.querySelector('#category');
     let categoryDefaultLabel = document.createElement('label');
     let categoryDefaultCheckbox = document.createElement('input');
@@ -54,47 +59,278 @@ async function addEventListenerToUnselectedCategoryCheckboxes() {
             if (el.value != 'All') {
                 let categoryAllCheckbox = document.getElementById('categoryAll');
                 categoryAllCheckbox.checked = false;
+                let counterOfChecked = categoryUnselectedCheckboxes.length;
+                categoryUnselectedCheckboxes.forEach((el) => {
+                    if (el.checked === false) {
+                        counterOfChecked--;
+                    }
+                })
+                if (counterOfChecked === 0 && categoryAllCheckbox.checked !== true) {
+                    categoryAllCheckbox.checked = true;
+                }
             } else {
                 let categoryAllCheckbox = document.getElementById('categoryAll');
-                if (categoryAllCheckbox.checked === true) {
-                    categoryUnselectedCheckboxes.forEach((el)=>{
-                       if (el.value != 'All') {
-                           el.checked = false;
-                       }else{
-                        // napisat ako se unchecka i svi su unchecked da vrati na checked
-                       }
+                if (categoryAllCheckbox.checked === true) { // console.log('tu');
+                    categoryUnselectedCheckboxes.forEach((el) => {
+                        if (el.value != 'All') {
+                            el.checked = false;
+                        }
                     });
+                } else {
+                    let counterOfChecked = categoryUnselectedCheckboxes.length;
+                    categoryUnselectedCheckboxes.forEach((el) => {
+                        if (el.checked === false) {
+                            counterOfChecked--;
+                        }
+                    })
+                    if (counterOfChecked === 0 && categoryAllCheckbox.checked !== true) {
+                        categoryAllCheckbox.checked = true;
+                    }
                 }
             }
         })
-
     })
+}
+
+// RETRIEVING QUESTIONS
+
+async function getQuestions() {
+    let [numberOfQuestions, chosenCategories, chosenDifficulty] = getUserInput();
+    console.log(chosenDifficulty);
+    let url = 'https://the-trivia-api.com/api/questions?categories='
+    chosenCategories.forEach((el) => {
+        url += el.value.replace(/&/g, 'and').replace(/\s/g, '_').toLowerCase() + ',';
+    })
+    url.length = url.length - 1;
+    startLoader();
+    let questionsArr = [];
+    try {
+        while (numberOfQuestions != questionsArr.length) {
+            let questions;
+            if (questionsArr.length + 20 <= numberOfQuestions) {
+                let fetchUrl = `${url}&limit=20`
+                if (chosenDifficulty != 'random') {
+                    fetchUrl += `&difficulty=${chosenDifficulty}`
+                }
+                questions = await fetch(fetchUrl);
+                questions = await questions.json();
+                // console.log(questions);
+            } else {
+                let fetchUrl = `${url}&limit=${
+                    numberOfQuestions - questionsArr.length
+                }`
+                if (chosenDifficulty != 'random') {
+                    fetchUrl += `&difficulty=${chosenDifficulty}`
+                }
+                questions = await fetch(fetchUrl);
+                questions = await questions.json();
+            } questionsArr.push(... questions);
+            // console.log(questionsArr);
+            console.log(questionsArr.length);
+            let repeatCounter = 0;
+            for (let i = 0; i < questionsArr.length; i++) {
+                for (let j = 0; j < questionsArr.length; j++) {
+                    if (questionsArr[i].question === questionsArr[j].question) {
+                        repeatCounter++;
+                        if (repeatCounter === 2) {
+                            questionsArr.splice(j, 1);
+                            j--;
+                            repeatCounter--;
+                        }
+                    }
+                }
+                repeatCounter = 0;
+            }
+        }
+        stopLoader();
+    } catch (error) {
+        console.error(error);
+        let errorMessage = document.createElement('h2')
+        errorMessage.innerHTML = 'API crashed, try again later with fewer questions'
+        let container = document.getElementById('container');
+        container.appendChild(errorMessage);
+    }
+
+    // console.log(questionsArr.length);
+   firstDisplayQuestion(questionsArr);
+}
+
+// DISPLAYING QUESTIONS
+
+function firstDisplayQuestion(questionsArr) {
+    let displayQuestionsArr = [];
+
+    for (let i = 0; i < questionsArr.length; i++) {
+        displayQuestionsArr.push(generateHTMLQuestionAndAnswer(questionsArr[i]));
+    }
+
+    displayQuestion(displayQuestionsArr[0].html);
+    questionsArr.splice(0,1);
+    localStorage.setItem('questionsArr',JSON.stringify(questionsArr));
+    
+}
+
+function displayQuestion(questionNode = 0) {
+    if (questionNode === 0) {
+        let questionsArr = JSON.parse(localStorage.getItem('questionsArr'));
+        let displayQuestionsArr = questionsArr.map((el) => { return el = generateHTMLQuestionAndAnswer(el); });
+        questionNode = displayQuestionsArr[0].html;
+        console.log(displayQuestionsArr);
+        questionsArr.splice(0,1);
+        localStorage.setItem('questionsArr',JSON.stringify(questionsArr));
+    }
+    let container = document.getElementById('container');
+    clearContainer()
+    container.appendChild(questionNode);
+}
+
+function generateHTMLQuestionAndAnswer(question) {
+    let questionParent = document.createElement('div');
+    let questionChild = document.createElement('h3');
+    let categoryChild = document.createElement('h2');
+    let answersParent = document.createElement('div');
+    let answers = [
+        ... question.incorrectAnswers,
+        question.correctAnswer
+    ];
+    // console.log(answers);
+    categoryChild.innerHTML = question.category;
+    questionChild.innerHTML = question.question;
+    questionParent.appendChild(categoryChild);
+    questionParent.appendChild(questionChild);
+    questionParent.className = 'questionContainer';
+    answersParent.className = 'answersContainer';
+    answers.sort((a, b) => {
+        return a.localeCompare(b);
+    });
+    // console.log(answers);
+
+    for (let i = 0; i < answers.length; i++) {
+        let answerChild = document.createElement('button');
+        answerChild.innerHTML = answers[i];
+        answerChild.value = answers[i];
+        answerChild.className = 'answer';    
+        function answerChildClickHandler() {
+            if (answerChild.value === question.correctAnswer) {
+                console.log(question.correctAnswer);
+                let answerArr = document.querySelectorAll('.answer');
+                let answersParentDiv = document.querySelector('.answersContainer');
+                answersParentDiv.innerHTML = ''
+                answerArr.forEach((el)=>{
+                    let newAnswerChild = document.createElement('button');
+                    newAnswerChild.innerHTML = el.innerHTML;
+                    newAnswerChild.value = el.value;
+                    newAnswerChild.className = 'answer';
+                    if (newAnswerChild.value === question.correctAnswer) {
+                        newAnswerChild.style.backgroundColor = 'lightgreen';
+                    }
+                    answersParentDiv.appendChild(newAnswerChild);
+                });
+                setTimeout(displayQuestion,1000);
+            }else{
+                console.log(answerChild.value+'W');
+                let answerArr = document.querySelectorAll('.answer');
+                let answersParentDiv = document.querySelector('.answersContainer');
+                answersParentDiv.innerHTML = ''
+                answerArr.forEach((el)=>{
+                    let newAnswerChild = document.createElement('button');
+                    newAnswerChild.innerHTML = el.innerHTML;
+                    newAnswerChild.value = el.value;
+                    newAnswerChild.className = 'answer';
+                    
+                    if (question.incorrectAnswers.includes(newAnswerChild.value)) {
+                        newAnswerChild.style.backgroundColor = 'pink';
+                    }else{
+                        newAnswerChild.style.backgroundColor = 'lightgreen';
+                    }
+                    answersParentDiv.appendChild(newAnswerChild);
+                });
+                setTimeout(displayQuestion,1000);
+                
+            }
+    }
+        answerChild.addEventListener('click', answerChildClickHandler, { once:true });
+        // answerChild.addEventListener('click',()=>{
+        //     let answerArr = document.querySelectorAll('.answer');
+        //     console.log('ye'); // IHAVE CAME TO THIS POINT
+        //     answerArr.forEach((el)=>{
+        //         console.log( el.removeEventListener('click',answerChildClickHandler,true);
+        //     });
+            
+        // })
+        answersParent.appendChild(answerChild);
+    }
+    questionParent.appendChild(answersParent);
+    return {
+        html : questionParent,
+        question : question.question,
+        answer : question.correctAnswer
+    }
 
 }
 
-//RETRIVEING USER INPUT 
 
-function retrievingUserInput() {
+
+// const targetNode = document.getElementById('container');
+//     const config = { attributes: true, childList: true, subtree: true };
+//     const callback = (mutationList, observer) => {
+//         for (const mutation of mutationList) {
+//           if (mutation.type === 'childList') {
+//             console.log('A child node has been added or removed.');
+//           } else if (mutation.type === 'attributes') {
+//             console.log(`The ${mutation.attributeName} attribute was modified.`);
+//           }
+//         }
+
+//       };
+//       const observer = new MutationObserver(callback);
+//       observer.observe(targetNode, config);
+//     //   observer.disconnect();
+
+
+// RETRIVEING USER INPUT
+
+function getUserInput() {
     let numberOfQuestions = document.getElementById('numberOfQuestions');
     let chosenCategories = [];
     let chosenDifficulty = document.getElementById('difficulty');
     numberOfQuestions = numberOfQuestions.value || numberOfQuestions.placeholder;
-    console.log(numberOfQuestions);
+    // console.log(numberOfQuestions);
     retriveChosenCategories(chosenCategories);
-    console.log(chosenCategories);
+    // console.log(chosenCategories);
     chosenDifficulty = chosenDifficulty.value;
-    console.log(chosenDifficulty);
-    
+    return [numberOfQuestions, chosenCategories, chosenDifficulty]
 }
 
 function retriveChosenCategories(chosenCategories) {
     let categories = document.querySelectorAll('.categoryCheckbox');
-    categories.forEach((el)=>{
+    categories.forEach((el) => {
         if (el.checked) {
             chosenCategories.push(el);
         }
     });
 }
 
+function startLoader() {
+    let container = document.getElementById('container')
+    let loader = document.createElement('div');
+    loader.className = 'loader';
+    clearContainer();
+    container.appendChild(loader);
+}
+
+function stopLoader() {
+    document.querySelector('.loader').remove();
+}
+
+function clearContainer() {
+    let container = document.getElementById('container')
+    let containerChildNodesArr = [... container.childNodes];
+    containerChildNodesArr.forEach((el) => {
+        el.remove()
+    });
+}
+// document.addEventListener('do')
+
 let startButton = document.getElementById('startButton');
-startButton.addEventListener('click',retrievingUserInput)
+startButton.addEventListener('click', getQuestions)
