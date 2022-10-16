@@ -29,6 +29,12 @@ label, button{
     margin: 20px;
 }
 
+.categoryContainer label{
+    display: flex;
+    align-items: center;
+    margin-left: 0px;
+}
+
 input[type='text'],select{
     font-size: 18px;
     display: block;
@@ -47,6 +53,7 @@ input[type='text'],select{
 .categoryContainer{
     display: flex;
     justify-content: space-between;
+    height: 35px;
 }
 
 .answer{

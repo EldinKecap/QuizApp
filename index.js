@@ -1,3 +1,4 @@
+//SETTING UP FRONT PAGE
 async function fetchData() {
     let response = await fetch('https://the-trivia-api.com/api/categories');
     // console.log(response);
@@ -46,7 +47,7 @@ displayCategories();
 
 async function addEventListenerToUnselectedCategoryCheckboxes() {
     let categoryUnselectedCheckboxes = document.querySelectorAll('.categoryCheckbox');
-    console.log(categoryUnselectedCheckboxes);
+    // console.log(categoryUnselectedCheckboxes);
     // console.log(el.value);
     categoryUnselectedCheckboxes.forEach((el) => {
         el.addEventListener('change', () => {
@@ -59,6 +60,8 @@ async function addEventListenerToUnselectedCategoryCheckboxes() {
                     categoryUnselectedCheckboxes.forEach((el)=>{
                        if (el.value != 'All') {
                            el.checked = false;
+                       }else{
+                        // napisat ako se unchecka i svi su unchecked da vrati na checked
                        }
                     });
                 }
@@ -68,3 +71,30 @@ async function addEventListenerToUnselectedCategoryCheckboxes() {
     })
 
 }
+
+//RETRIVEING USER INPUT 
+
+function retrievingUserInput() {
+    let numberOfQuestions = document.getElementById('numberOfQuestions');
+    let chosenCategories = [];
+    let chosenDifficulty = document.getElementById('difficulty');
+    numberOfQuestions = numberOfQuestions.value || numberOfQuestions.placeholder;
+    console.log(numberOfQuestions);
+    retriveChosenCategories(chosenCategories);
+    console.log(chosenCategories);
+    chosenDifficulty = chosenDifficulty.value;
+    console.log(chosenDifficulty);
+    
+}
+
+function retriveChosenCategories(chosenCategories) {
+    let categories = document.querySelectorAll('.categoryCheckbox');
+    categories.forEach((el)=>{
+        if (el.checked) {
+            chosenCategories.push(el);
+        }
+    });
+}
+
+let startButton = document.getElementById('startButton');
+startButton.addEventListener('click',retrievingUserInput)
