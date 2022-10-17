@@ -1,11 +1,52 @@
 body{
-    background-color: lightgrey;
+    background-color: #071E3D;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    overflow: hidden;
 }
 
 h1{
     text-align: center;
     margin: 5px 10px;
+    color: #21E6C1;
+}
+
+#header {
+    font-size: 60px;
+}
+
+#stylingDiv2{
+    position:absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 190vw;
+    height: 70vh;
+    transform: rotate(135deg);
+    translate: 100vh 45vw;
+    background-color: #8d129dc0;
+    z-index: -1;
+} 
+
+#stylingDiv1{
+    position:absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 190vw;
+    height: 70vh;
+    transform: rotate(25deg);
+    translate: -100vh 45vw;
+    background-color: #21E6C1;
+    z-index: -1;
+}
+
+@media (max-width:700px) {
+    #stylingDiv1{
+        translate:-90vh 45vh;
+        width: 200vh;
+    }
+}
+
+hr{
+    border-color: #21E6C1;
 }
 
 #container{
@@ -14,12 +55,13 @@ h1{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
+    margin-top: 20px;
     height: fit-content;
-    border-radius: 15px;
+    border-radius: 5px;
     width: 420px;
-    background-color: white;
-    box-shadow:inset 0px 0px 5px gray;
+    background-color: #1F4287;
+    color: #21E6C1;
+    box-shadow: 0px 0px 5px #21E6C1;
     padding: 0px 5px 10px 5px;
     font-weight: 600;
 }
@@ -40,7 +82,7 @@ input[type='text'],select{
     display: block;
     margin: auto;
     width: 150px;
-    height: 22px;
+    height: 35px;
     margin-top: 5px;
     border-radius: 8px;
     text-align: center;
@@ -83,6 +125,7 @@ input[type='text'],select{
 
 .answer:hover{
     cursor: pointer;
+    background-color: darkgray;
 }
 
 a{
@@ -98,6 +141,7 @@ a{
     text-decoration: none;  
     padding-top: 7px;
 }
+
 a:hover{
     background-color: darkgray;
 }
@@ -117,19 +161,30 @@ h3{
 }
 
 #startButton{
-    background-color: lightgray;
+    background-color: #21E6C1;
     border: none;
     border-radius: 8px;
-    width: 100px;
-    height: 35px;
+    width: 120px;
+    height: 50px;
     font-weight: 600;
-    font-size: 17px;
+    font-size: 20px;
 }
 
 #startButton:hover{
-    background-color: darkgray;
+    background-color: #21e6c2c5;
 }
 
-#timer{
-    height: 25px;
+@media(max-width:450px) {
+    .answersContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .answer{
+        width: 200px;
+    }
 }
+/* #timer{
+    height: 25px;
+} */
