@@ -171,17 +171,22 @@ function firstDisplayQuestion(questionsArr) {
 }
 
 function displayQuestion(questionNode = 0) {
+    try {
     if (questionNode === 0) {
         let questionsArr = JSON.parse(localStorage.getItem('questionsArr'));
         let displayQuestionsArr = questionsArr.map((el) => { return el = generateHTMLQuestionAndAnswer(el); });
-        questionNode = displayQuestionsArr[0].html;
-        console.log(displayQuestionsArr);
-        questionsArr.splice(0,1);
-        localStorage.setItem('questionsArr',JSON.stringify(questionsArr));
+            questionNode = displayQuestionsArr[0].html ;
+            // console.log(displayQuestionsArr);
+            questionsArr.splice(0,1);
+            localStorage.setItem('questionsArr',JSON.stringify(questionsArr));
+        }
+        let container = document.getElementById('container');
+        clearContainer();
+        container.appendChild(questionNode);
+    } catch (error) {
+        console.log("no more questions");
+        displayThankYouScreen();
     }
-    let container = document.getElementById('container');
-    clearContainer()
-    container.appendChild(questionNode);
 }
 
 function generateHTMLQuestionAndAnswer(question) {
@@ -223,6 +228,7 @@ function generateHTMLQuestionAndAnswer(question) {
                     newAnswerChild.className = 'answer';
                     if (newAnswerChild.value === question.correctAnswer) {
                         newAnswerChild.style.backgroundColor = 'lightgreen';
+                        counterOfAnswers(true);
                     }
                     answersParentDiv.appendChild(newAnswerChild);
                 });
@@ -240,8 +246,10 @@ function generateHTMLQuestionAndAnswer(question) {
                     
                     if (question.incorrectAnswers.includes(newAnswerChild.value)) {
                         newAnswerChild.style.backgroundColor = 'pink';
+                        // counterOfAnswers(false);
                     }else{
                         newAnswerChild.style.backgroundColor = 'lightgreen';
+                        counterOfAnswers(false);
                     }
                     answersParentDiv.appendChild(newAnswerChild);
                 });
@@ -249,15 +257,7 @@ function generateHTMLQuestionAndAnswer(question) {
                 
             }
     }
-        answerChild.addEventListener('click', answerChildClickHandler, { once:true });
-        // answerChild.addEventListener('click',()=>{
-        //     let answerArr = document.querySelectorAll('.answer');
-        //     console.log('ye'); // IHAVE CAME TO THIS POINT
-        //     answerArr.forEach((el)=>{
-        //         console.log( el.removeEventListener('click',answerChildClickHandler,true);
-        //     });
-            
-        // })
+        answerChild.addEventListener('click', answerChildClickHandler, { once : true });
         answersParent.appendChild(answerChild);
     }
     questionParent.appendChild(answersParent);
@@ -311,6 +311,8 @@ function retriveChosenCategories(chosenCategories) {
     });
 }
 
+//Extras
+
 function startLoader() {
     let container = document.getElementById('container')
     let loader = document.createElement('div');
@@ -330,7 +332,41 @@ function clearContainer() {
         el.remove()
     });
 }
-// document.addEventListener('do')
+
+function displayThankYouScreen(){
+    let thankYouContainer = document.createElement('div');
+    let thankYouMessage = document.createElement('h1');
+    let answersStatus = document.createElement('h2');
+    let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
+    answersStatus.innerHTML = `Score: ${counterOfAnswers.correctAnswer} / ${counterOfAnswers.correctAnswer + counterOfAnswers.incorrectAnswer}`;
+    let container = document.getElementById('container');
+    thankYouMessage.innerHTML = 'Thank you for playing';
+    thankYouMessage.id = 'thankYouMessage';
+    clearContainer();
+    thankYouContainer.appendChild(thankYouMessage);
+    thankYouContainer.appendChild(answersStatus);
+    container.appendChild(thankYouContainer);
+    //CLEARED LOCAL STORAGE
+    localStorage.clear()
+};
+
+function counterOfAnswers(answerState){
+    console.log(localStorage.getItem('counterOfAnswers'));
+    if(!localStorage.getItem('counterOfAnswers')){
+        localStorage.setItem('counterOfAnswers',JSON.stringify({'correctAnswer' : 0, 'incorrectAnswer' : 0}));
+        console.log('bog');
+    }
+        let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
+        if (answerState) {
+            counterOfAnswers.correctAnswer += 1;
+            console.log(counterOfAnswers);
+        }else{
+            counterOfAnswers.incorrectAnswer += 1;
+            console.log(counterOfAnswers);
+        }
+    
+    localStorage.setItem('counterOfAnswers',JSON.stringify({correctAnswer : counterOfAnswers.correctAnswer, incorrectAnswer : counterOfAnswers.incorrectAnswer}));
+}
 
 let startButton = document.getElementById('startButton');
 startButton.addEventListener('click', getQuestions)
