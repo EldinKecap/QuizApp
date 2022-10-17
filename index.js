@@ -337,6 +337,9 @@ function displayThankYouScreen(){
     let thankYouContainer = document.createElement('div');
     let thankYouMessage = document.createElement('h1');
     let answersStatus = document.createElement('h2');
+    let playAgainLink = document.createElement('a');
+    playAgainLink.setAttribute('href','./index.html');
+    playAgainLink.innerHTML = 'Play again';
     let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
     answersStatus.innerHTML = `Score: ${counterOfAnswers.correctAnswer} / ${counterOfAnswers.correctAnswer + counterOfAnswers.incorrectAnswer}`;
     let container = document.getElementById('container');
@@ -345,6 +348,7 @@ function displayThankYouScreen(){
     clearContainer();
     thankYouContainer.appendChild(thankYouMessage);
     thankYouContainer.appendChild(answersStatus);
+    thankYouContainer.appendChild(playAgainLink);
     container.appendChild(thankYouContainer);
     //CLEARED LOCAL STORAGE
     localStorage.clear()
