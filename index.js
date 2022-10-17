@@ -135,6 +135,7 @@ async function getQuestions() {
                         if (repeatCounter === 2) {
                             questionsArr.splice(j, 1);
                             j--;
+                            // i--;
                             repeatCounter--;
                         }
                     }
@@ -145,6 +146,7 @@ async function getQuestions() {
         stopLoader();
     } catch (error) {
         console.error(error);
+        console.log(questionsArr.length);
         let errorMessage = document.createElement('h2')
         errorMessage.innerHTML = 'API crashed, try again later with fewer questions'
         let container = document.getElementById('container');
