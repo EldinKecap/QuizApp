@@ -149,12 +149,14 @@ async function getQuestions() {
         console.error(error);
         console.log(questionsArr.length);
         let errorMessage = document.createElement('h2');
-        errorMessage.innerHTML = `API crashed. Only ${questionsArr.length} retrieved`; 
+        errorMessage.innerHTML = `API crashed. Only ${
+            questionsArr.length
+        } retrieved`;
         let container = document.getElementById('container');
         container.appendChild(errorMessage);
-        setTimeout(()=>{
+        setTimeout(() => {
             firstDisplayQuestion(questionsArr);
-        },1500)
+        }, 1500)
     }
 
     // console.log(questionsArr.length);
@@ -170,26 +172,29 @@ function firstDisplayQuestion(questionsArr) {
     }
 
     displayQuestion(displayQuestionsArr[0].html);
-    questionsArr.splice(0,1);
-    localStorage.setItem('questionsArr',JSON.stringify(questionsArr));
-    
+    questionsArr.splice(0, 1);
+    localStorage.setItem('questionsArr', JSON.stringify(questionsArr));
+    // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 }
 
 function displayQuestion(questionNode = 0) {
     try {
-    if (questionNode === 0) {
-        let questionsArr = JSON.parse(localStorage.getItem('questionsArr'));
-        let displayQuestionsArr = questionsArr.map((el) => { return el = generateHTMLQuestionAndAnswer(el); });
-            questionNode = displayQuestionsArr[0].html ;
+        if (questionNode === 0) {
+            let questionsArr = JSON.parse(localStorage.getItem('questionsArr'));
+            let displayQuestionsArr = questionsArr.map((el) => {
+                return el = generateHTMLQuestionAndAnswer(el);
+            });
+            questionNode = displayQuestionsArr[0].html;
             // console.log(displayQuestionsArr);
-            questionsArr.splice(0,1);
-            localStorage.setItem('questionsArr',JSON.stringify(questionsArr));
+            questionsArr.splice(0, 1);
+            localStorage.setItem('questionsArr', JSON.stringify(questionsArr));
         }
         let container = document.getElementById('container');
         clearContainer();
         container.appendChild(questionNode);
-    } catch (error) {
-        // console.log("no more questions");
+        lineTimer();
+    } catch (error) { // console.log("no more questions");
         displayThankYouScreen();
     }
 }
@@ -219,14 +224,14 @@ function generateHTMLQuestionAndAnswer(question) {
         let answerChild = document.createElement('button');
         answerChild.innerHTML = answers[i];
         answerChild.value = answers[i];
-        answerChild.className = 'answer';    
+        answerChild.className = 'answer';
         function answerChildClickHandler() {
             if (answerChild.value === question.correctAnswer) {
                 console.log(question.correctAnswer);
                 let answerArr = document.querySelectorAll('.answer');
                 let answersParentDiv = document.querySelector('.answersContainer');
                 answersParentDiv.innerHTML = ''
-                answerArr.forEach((el)=>{
+                answerArr.forEach((el) => {
                     let newAnswerChild = document.createElement('button');
                     newAnswerChild.innerHTML = el.innerHTML;
                     newAnswerChild.value = el.value;
@@ -237,43 +242,37 @@ function generateHTMLQuestionAndAnswer(question) {
                     }
                     answersParentDiv.appendChild(newAnswerChild);
                 });
-                setTimeout(displayQuestion,1000);
-            }else{
-                console.log(answerChild.value+'W');
+                setTimeout(displayQuestion, 1000);
+            } else {
+                console.log(answerChild.value + 'W');
                 let answerArr = document.querySelectorAll('.answer');
                 let answersParentDiv = document.querySelector('.answersContainer');
                 answersParentDiv.innerHTML = ''
-                answerArr.forEach((el)=>{
+                answerArr.forEach((el) => {
                     let newAnswerChild = document.createElement('button');
                     newAnswerChild.innerHTML = el.innerHTML;
                     newAnswerChild.value = el.value;
                     newAnswerChild.className = 'answer';
-                    
+
                     if (question.incorrectAnswers.includes(newAnswerChild.value)) {
                         newAnswerChild.style.backgroundColor = 'pink';
                         // counterOfAnswers(false);
-                    }else{
+                    } else {
                         newAnswerChild.style.backgroundColor = 'lightgreen';
                         counterOfAnswers(false);
-                    }
-                    answersParentDiv.appendChild(newAnswerChild);
+                    } answersParentDiv.appendChild(newAnswerChild);
                 });
-                setTimeout(displayQuestion,1000);
-                
+                setTimeout(displayQuestion, 1000);
+
             }
-    }
-        answerChild.addEventListener('click', answerChildClickHandler, { once : true });
+        }
+        answerChild.addEventListener('click', answerChildClickHandler, {once: true});
         answersParent.appendChild(answerChild);
     }
     questionParent.appendChild(answersParent);
-    return {
-        html : questionParent,
-        question : question.question,
-        answer : question.correctAnswer
-    }
+    return {html: questionParent, question: question.question, answer: question.correctAnswer}
 
 }
-
 
 
 // const targetNode = document.getElementById('container');
@@ -316,7 +315,7 @@ function retriveChosenCategories(chosenCategories) {
     });
 }
 
-//Extras
+// Extras
 
 function startLoader() {
     let container = document.getElementById('container')
@@ -338,15 +337,19 @@ function clearContainer() {
     });
 }
 
-function displayThankYouScreen(){
+function displayThankYouScreen() {
     let thankYouContainer = document.createElement('div');
     let thankYouMessage = document.createElement('h1');
     let answersStatus = document.createElement('h2');
     let playAgainLink = document.createElement('a');
-    playAgainLink.setAttribute('href','./index.html');
+    playAgainLink.setAttribute('href', './index.html');
     playAgainLink.innerHTML = 'Play again';
     let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
-    answersStatus.innerHTML = `Score: ${counterOfAnswers.correctAnswer} / ${counterOfAnswers.correctAnswer + counterOfAnswers.incorrectAnswer}`;
+    answersStatus.innerHTML = `Score: ${
+        counterOfAnswers.correctAnswer
+    } / ${
+        counterOfAnswers.correctAnswer + counterOfAnswers.incorrectAnswer
+    }`;
     let container = document.getElementById('container');
     thankYouMessage.innerHTML = 'Thank you for playing';
     thankYouMessage.id = 'thankYouMessage';
@@ -355,31 +358,75 @@ function displayThankYouScreen(){
     thankYouContainer.appendChild(answersStatus);
     thankYouContainer.appendChild(playAgainLink);
     container.appendChild(thankYouContainer);
-    //CLEARED LOCAL STORAGE
+    // CLEARED LOCAL STORAGE
     localStorage.clear()
 };
 
-function counterOfAnswers(answerState){
-    console.log(localStorage.getItem('counterOfAnswers'));
-    if(!localStorage.getItem('counterOfAnswers')){
-        localStorage.setItem('counterOfAnswers',JSON.stringify({'correctAnswer' : 0, 'incorrectAnswer' : 0}));
-        console.log('bog');
+function counterOfAnswers(answerState) { // console.log(localStorage.getItem('counterOfAnswers'));
+    if (!localStorage.getItem('counterOfAnswers')) {
+        localStorage.setItem('counterOfAnswers', JSON.stringify({'correctAnswer': 0, 'incorrectAnswer': 0}));
+        // console.log('bog');
     }
-        let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
-        if (answerState) {
-            counterOfAnswers.correctAnswer += 1;
-            console.log(counterOfAnswers);
-        }else{
-            counterOfAnswers.incorrectAnswer += 1;
-            console.log(counterOfAnswers);
-        }
-    
-    localStorage.setItem('counterOfAnswers',JSON.stringify({correctAnswer : counterOfAnswers.correctAnswer, incorrectAnswer : counterOfAnswers.incorrectAnswer}));
+    let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
+    if (answerState) {
+        counterOfAnswers.correctAnswer += 1;
+        console.log(counterOfAnswers);
+    } else {
+        counterOfAnswers.incorrectAnswer += 1;
+        console.log(counterOfAnswers);
+    }
+
+    localStorage.setItem('counterOfAnswers', JSON.stringify({correctAnswer: counterOfAnswers.correctAnswer, incorrectAnswer: counterOfAnswers.incorrectAnswer}));
 }
 
 let startButton = document.getElementById('startButton');
 startButton.addEventListener('click', getQuestions)
 
-window.addEventListener('unload',()=>{
+window.addEventListener('unload', () => {
     localStorage.clear();
 })
+
+// TIMER
+
+function lineTimer() {
+    let line = document.querySelector('hr');
+    let start = 100;
+    let sec = 0;
+    console.log();
+
+    let myInterval = setInterval(() => {
+        sec++;
+        console.log(sec);
+    }, 1000);
+
+    let timer = setInterval(() => {
+        start -= 0.25;
+        line.style.width = start + 'vw'
+        if (start == 0) {
+            clearInterval(timer);
+            clearInterval(myInterval);
+            displayQuestion();
+            counterOfAnswers(false);
+            line.style.width = '100vw';
+        }
+
+    }, 37.5);
+    let button = [...document.querySelectorAll('.answer')];
+    //    console.log(button);
+    button.forEach((el) => {
+        console.log(el);
+        el.addEventListener('click', () => {
+            clearInterval(timer);
+            clearInterval(myInterval);
+            line.style.width = '100vw';
+        }, {once: true})
+    })
+
+}
+
+
+//    let button = document.querySelector('button');
+// startButton.addEventListener('click',()=>{
+//     lineTimer(timerCheck);
+//     timerCheck = true;
+//    });
