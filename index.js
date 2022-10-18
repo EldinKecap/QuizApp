@@ -344,22 +344,24 @@ function displayThankYouScreen() {
     let playAgainLink = document.createElement('a');
     playAgainLink.setAttribute('href', './index.html');
     playAgainLink.innerHTML = 'Play again';
-    let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
-    answersStatus.innerHTML = `Score: ${
-        counterOfAnswers.correctAnswer
-    } / ${
-        counterOfAnswers.correctAnswer + counterOfAnswers.incorrectAnswer
-    }`;
-    let container = document.getElementById('container');
-    thankYouMessage.innerHTML = 'Thank you for playing';
-    thankYouMessage.id = 'thankYouMessage';
-    clearContainer();
-    thankYouContainer.appendChild(thankYouMessage);
-    thankYouContainer.appendChild(answersStatus);
-    thankYouContainer.appendChild(playAgainLink);
-    container.appendChild(thankYouContainer);
+    setTimeout(()=>{
+        let counterOfAnswers = JSON.parse(localStorage.getItem('counterOfAnswers'));
+        answersStatus.innerHTML = `Score: ${
+            counterOfAnswers.correctAnswer
+        } / ${
+            counterOfAnswers.correctAnswer + counterOfAnswers.incorrectAnswer
+        }`;
+        let container = document.getElementById('container');
+        thankYouMessage.innerHTML = 'Thank you for playing';
+        thankYouMessage.id = 'thankYouMessage';
+        clearContainer();
+        thankYouContainer.appendChild(thankYouMessage);
+        thankYouContainer.appendChild(answersStatus);
+        thankYouContainer.appendChild(playAgainLink);
+        container.appendChild(thankYouContainer);
+    },0)
+   
     // CLEARED LOCAL STORAGE
-    localStorage.clear()
 };
 
 function counterOfAnswers(answerState) { // console.log(localStorage.getItem('counterOfAnswers'));
@@ -410,7 +412,7 @@ function lineTimer() {
             line.style.width = '100vw';
         }
 
-    }, 37.5);
+    }, 27);
     let button = [...document.querySelectorAll('.answer')];
     //    console.log(button);
     button.forEach((el) => {
