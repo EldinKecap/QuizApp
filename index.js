@@ -144,17 +144,20 @@ async function getQuestions() {
             }
         }
         stopLoader();
+        firstDisplayQuestion(questionsArr);
     } catch (error) {
         console.error(error);
         console.log(questionsArr.length);
-        let errorMessage = document.createElement('h2')
-        errorMessage.innerHTML = 'API crashed, try again later with fewer questions'
+        let errorMessage = document.createElement('h2');
+        errorMessage.innerHTML = `API crashed. Only ${questionsArr.length} retrieved`; 
         let container = document.getElementById('container');
         container.appendChild(errorMessage);
+        setTimeout(()=>{
+            firstDisplayQuestion(questionsArr);
+        },1500)
     }
 
     // console.log(questionsArr.length);
-   firstDisplayQuestion(questionsArr);
 }
 
 // DISPLAYING QUESTIONS
@@ -186,7 +189,7 @@ function displayQuestion(questionNode = 0) {
         clearContainer();
         container.appendChild(questionNode);
     } catch (error) {
-        console.log("no more questions");
+        // console.log("no more questions");
         displayThankYouScreen();
     }
 }
@@ -376,3 +379,7 @@ function counterOfAnswers(answerState){
 
 let startButton = document.getElementById('startButton');
 startButton.addEventListener('click', getQuestions)
+
+window.addEventListener('unload',()=>{
+    localStorage.clear();
+})

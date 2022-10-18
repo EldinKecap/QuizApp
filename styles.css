@@ -15,6 +15,7 @@ h1{
 #header {
     font-size: 60px;
 }
+
 #stylingDiv2{
     position:absolute;
     bottom: 0px; 
@@ -42,7 +43,7 @@ h1{
     z-index: -1;
 }
 
-@media (max-width:700px) {
+@media (pointer:none), (pointer:coarse) {
     body{
         overflow: visible;
     }
