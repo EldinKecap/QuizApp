@@ -156,7 +156,7 @@ async function getQuestions() {
         container.appendChild(errorMessage);
         setTimeout(() => {
             firstDisplayQuestion(questionsArr);
-        }, 1500)
+        }, 1500);
     }
 
     // console.log(questionsArr.length);
@@ -172,6 +172,8 @@ function firstDisplayQuestion(questionsArr) {
     }
 
     displayQuestion(displayQuestionsArr[0].html);
+    mainTimer();
+    // console.log(mainTimer);
     questionsArr.splice(0, 1);
     localStorage.setItem('questionsArr', JSON.stringify(questionsArr));
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,9 +196,28 @@ function displayQuestion(questionNode = 0) {
         clearContainer();
         container.appendChild(questionNode);
         lineTimer();
-    } catch (error) { // console.log("no more questions");
+    } catch (error) { 
+        // console.log("no more questions");
         displayThankYouScreen();
     }
+}
+
+function mainTimer() {
+    
+        let counter = 0;
+        let mainTimer = setInterval(()=>{
+            counter++;
+            try {
+                let thankYouContainer = document.getElementById('thankYouContainer');
+                let overAllTimeOfCompletion = document.createElement('h3');
+                overAllTimeOfCompletion.innerHTML = `You completed this quiz in ${counter} seconds`;
+                thankYouContainer.appendChild(overAllTimeOfCompletion);
+                clearInterval(mainTimer);
+            } catch (error) {
+               
+            }
+        },1000);
+      
 }
 
 function generateHTMLQuestionAndAnswer(question) {
@@ -342,6 +363,7 @@ function displayThankYouScreen() {
     let thankYouMessage = document.createElement('h1');
     let answersStatus = document.createElement('h2');
     let playAgainLink = document.createElement('a');
+    thankYouContainer.id = 'thankYouContainer';
     playAgainLink.setAttribute('href', './index.html');
     playAgainLink.innerHTML = 'Play again';
     setTimeout(()=>{
@@ -394,7 +416,6 @@ function lineTimer() {
     let line = document.querySelector('hr');
     let start = 100;
     let sec = 0;
-    console.log();
 
     let myInterval = setInterval(() => {
         sec++;
@@ -411,10 +432,10 @@ function lineTimer() {
             counterOfAnswers(false);
             line.style.width = '100vw';
         }
-
     }, 27);
+
     let button = [...document.querySelectorAll('.answer')];
-    //    console.log(button);
+    
     button.forEach((el) => {
         console.log(el);
         el.addEventListener('click', () => {

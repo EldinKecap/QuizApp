@@ -69,7 +69,7 @@ hr{
     align-items: center;
     margin-top: 20px;
     height: fit-content;
-    border-radius: 5px;
+    border-radius: 3px;
     width: 400px;
     background-color: #1F4287;
     color: #21E6C1;
@@ -109,7 +109,29 @@ input[type='checkbox']{
 
 #category{
     display: block;
+    height: 25vh;
+    overflow-y: scroll;
+    padding: 0px 10px;
 }
+/* STYLING SCROLL BAR */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #21E6C1; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #21e6c2c5; 
+  }
 
 .categoryContainer{
     display: flex;
@@ -186,6 +208,10 @@ a:hover{
 
 h3{
     margin: 5px;
+}
+
+#thankYouContainer h3 {
+    margin-top: 15px;
 }
 
 #startButton {
