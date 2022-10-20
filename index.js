@@ -166,11 +166,7 @@ async function getQuestions() {
 
 function firstDisplayQuestion(questionsArr) {
     let displayQuestionsArr = [];
-
-    for (let i = 0; i < questionsArr.length; i++) {
-        displayQuestionsArr.push(generateHTMLQuestionAndAnswer(questionsArr[i]));
-    }
-
+    displayQuestionsArr.push(generateHTMLQuestionAndAnswer(questionsArr[0]));
     displayQuestion(displayQuestionsArr[0].html);
     mainTimer();
     // console.log(mainTimer);
