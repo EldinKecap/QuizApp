@@ -12,6 +12,7 @@ h1{
     color: #21E6C1;
 }
 
+
 #header {
     font-size: 60px;
 }
@@ -77,11 +78,30 @@ hr{
     padding: 0px 5px 10px 5px;
     font-weight: 600;
     padding-bottom: 15px ;
+    animation-name: slide;
+    animation-duration: 0.75s;
+    animation-timing-function:cubic-bezier(0.19, 1, 0.22, 1);
+    animation-fill-mode: forwards;
+}
+
+@keyframes slide {
+    0%{
+        width: 0px;
+        overflow-x: hidden;
+    }
+    100%{
+        width: 400px;
+    }
+}
+
+#categoryHeading {
+    width: max-content;
 }
 
 label, button{
     text-align: center;
     margin: 20px;
+    width: max-content;
 }
 
 .categoryContainer label{
@@ -90,7 +110,7 @@ label, button{
     margin-left: 0px;
 }
 
-input[type='text'],select{
+input[type='number'],select{
     font-size: 18px;
     display: block;
     margin: auto;
@@ -111,6 +131,7 @@ input[type='checkbox']{
     display: block;
     height: 27vh;
     overflow-y: scroll;
+    width: 200px;
     padding: 0px 10px;
 }
 /* STYLING SCROLL BAR */
@@ -144,10 +165,10 @@ input[type='checkbox']{
     border: 16px solid #f3f3f3; /* Light grey */
     border-top: 16px solid #071E3D; 
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
     animation: spin 2s linear infinite;
-    margin: 30px 0px;
+    margin: 30px 30px;
   }
   
   @keyframes spin {
