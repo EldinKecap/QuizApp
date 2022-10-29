@@ -206,7 +206,7 @@ function mainTimer() {
             try {
                 let thankYouContainer = document.getElementById('thankYouContainer');
                 let overAllTimeOfCompletion = document.createElement('h3');
-                overAllTimeOfCompletion.innerHTML = `You completed this quiz in ${counter} seconds`;
+                overAllTimeOfCompletion.innerHTML = `Time: ${counter} sec`;
                 thankYouContainer.appendChild(overAllTimeOfCompletion);
                 clearInterval(mainTimer);
             } catch (error) {
@@ -357,8 +357,11 @@ function clearContainer() {
 function displayThankYouScreen() {
     let thankYouContainer = document.createElement('div');
     let thankYouMessage = document.createElement('h1');
+    let trophyImage = document.createElement('img');
     let answersStatus = document.createElement('h2');
     let playAgainLink = document.createElement('a');
+    trophyImage.src = './images/trophy.png';
+    trophyImage.width = '150';
     thankYouContainer.id = 'thankYouContainer';
     playAgainLink.setAttribute('href', './index.html');
     playAgainLink.innerHTML = 'Play again';
@@ -374,6 +377,7 @@ function displayThankYouScreen() {
         thankYouMessage.id = 'thankYouMessage';
         clearContainer();
         thankYouContainer.appendChild(thankYouMessage);
+        thankYouContainer.appendChild(trophyImage);
         thankYouContainer.appendChild(answersStatus);
         thankYouContainer.appendChild(playAgainLink);
         container.appendChild(thankYouContainer);

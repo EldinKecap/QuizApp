@@ -202,7 +202,6 @@ input[type='checkbox']{
 a{
     margin-bottom: 50px;
     background-color: #21E6C1;
-    border: solid;
     border-radius: 8px;
     width: 110px;
     height: 35px;
@@ -232,6 +231,10 @@ h3{
 }
 
 #thankYouContainer h3 {
+    margin-top: 15px;
+}
+
+#thankYouContainer img {
     margin-top: 15px;
 }
 
