@@ -4,7 +4,17 @@ body{
     margin: 0px;
     padding: 0px;
     overflow: hidden;
+    background: url('./images/QuizBG.svg') top left no-repeat;
+    background-attachment: fixed;
+    background-color: grey;
+    background-size: cover;
+
+
 }
+
+body {
+    
+  }
 
 h1{
     text-align: center;
@@ -17,31 +27,6 @@ h1{
     font-size: 60px;
 }
 
-#stylingDiv2{
-    position:absolute;
-    bottom: 0px;     
-    right: 0px; 
-    width: 190vw;
-    height: 70vh;
-    transform: rotate(135deg);
-    translate: 100vh 45vw;
-    background-color: #8d129dc0;
-    z-index: -1; 
-    
-} 
-
-
-#stylingDiv1{
-    position:absolute;
-    bottom: 0px;
-    left: 0px;
-    width: 190vw;
-    height: 80vh;
-    transform: rotate(25deg);
-    translate: -100vh 45vw;
-    background-color: #21E6C1;
-    z-index: -1;
-}
 
 @media (pointer:none), (pointer:coarse) {
     body{
